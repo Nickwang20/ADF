@@ -57,7 +57,7 @@
 		"parameters": {
 			"mplp_tag": {
 				"type": "string",
-				"defaultValue": "databricks"
+				"defaultValue": "python"
 			}
 		},
 		"annotations": [],
