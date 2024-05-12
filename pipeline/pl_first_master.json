@@ -120,7 +120,8 @@
 				"type": "array",
 				"defaultValue": [
 					"python",
-					"databricks"
+					"databricks",
+					"azure_data_factory"
 				]
 			},
 			"mplp_union_folder": {
