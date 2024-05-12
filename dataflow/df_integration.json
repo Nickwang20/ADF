@@ -107,12 +107,14 @@
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1factdata",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('roundRobin', 2)) ~> sink1factdata",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1dimdata"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('roundRobin', 2)) ~> sink1dimdata"
 			]
 		}
 	}
