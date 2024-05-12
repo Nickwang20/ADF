@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "loadDimtable",
+				"name": "loadDimTable",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -78,11 +78,11 @@
 				]
 			},
 			{
-				"name": "Copy data1_copy1",
+				"name": "loadFactTable",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "loadDimtable",
+						"activity": "loadDimTable",
 						"dependencyConditions": [
 							"Succeeded"
 						]
