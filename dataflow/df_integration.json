@@ -19,6 +19,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "sink1factdata"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_Parquet_sliver",
+						"type": "DatasetReference"
+					},
+					"name": "sink1dimdata"
 				}
 			],
 			"transformations": [
@@ -30,6 +37,9 @@
 				},
 				{
 					"name": "window1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -92,11 +102,17 @@
 				"select1 window(over({owner.account_id}),",
 				"     asc({owner.account_id}, true),",
 				"     row_number = rowNumber()) ~> window1",
+				"window1 filter(row_number==1) ~> filter1",
 				"selectfactdata sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1factdata"
+				"     skipDuplicateMapOutputs: true) ~> sink1factdata",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1dimdata"
 			]
 		}
 	}

@@ -3,8 +3,10 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Delete1",
+				"name": "purgeBronze",
 				"type": "Delete",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -41,9 +43,11 @@
 			{
 				"name": "ForEach1",
 				"type": "ForEach",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "Delete1",
+						"activity": "purgeBronze",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -180,8 +184,69 @@
 				}
 			},
 			{
-				"name": "Data flow1",
+				"name": "flowBronzetoSilver",
 				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "purgeSilver",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_integration",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"dsp_folder": {
+									"value": "@pipeline().parameters.plp_union_folder",
+									"type": "Expression"
+								}
+							},
+							"sink1factdata": {
+								"dsp_folder": {
+									"value": "@pipeline().parameters.plp_fact_folder",
+									"type": "Expression"
+								}
+							},
+							"sink1dimdata": {
+								"dsp_folder": {
+									"value": "@pipeline().parameters.plp_dim_folder",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceParameters": {
+							"source1": {
+								"schemaLinkedService": {
+									"dsp_folder": {
+										"value": "@pipeline().parameters.plp_union_folder",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "purgeSilver",
+				"type": "Delete",
 				"dependsOn": [
 					{
 						"activity": "ForEach1",
@@ -199,15 +264,26 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_integration",
-						"type": "DataFlowReference"
+					"dataset": {
+						"referenceName": "ds_Parquet_sliver",
+						"type": "DatasetReference",
+						"parameters": {
+							"dsp_folder": " "
+						}
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "ls_AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "log"
 					},
-					"traceLevel": "Fine"
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
 				}
 			}
 		],
@@ -216,6 +292,12 @@
 				"type": "array"
 			},
 			"plp_union_folder": {
+				"type": "string"
+			},
+			"plp_fact_folder": {
+				"type": "string"
+			},
+			"plp_dim_folder": {
 				"type": "string"
 			}
 		},
