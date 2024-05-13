@@ -5,8 +5,6 @@
 			{
 				"name": "ingest",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "loggingpipelinestart",
@@ -56,8 +54,6 @@
 			{
 				"name": "transformation",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "ingest",
@@ -99,8 +95,6 @@
 			{
 				"name": "load",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "transformation",
@@ -150,8 +144,6 @@
 			{
 				"name": "loggingpipelinestart",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Lookup1",
