@@ -6,7 +6,13 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"ds_tags": {
+			"dsp_tags": {
+				"type": "string"
+			},
+			"dsp_fromdate": {
+				"type": "string"
+			},
+			"dsp_todate": {
 				"type": "string"
 			}
 		},
@@ -14,7 +20,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "@concat('questions?order=desc&sort=activity&tagged=', dataset().ds_tags, '&site=stackoverflow')",
+				"value": "@concat('questions?fromdate=', dataset().dsp_fromdate,'&todate=', dataset().dsp_todate,'&order=desc&sort=activity&tagged=', dataset().dsp_tags, '&site=stackoverflow')",
 				"type": "Expression"
 			}
 		},

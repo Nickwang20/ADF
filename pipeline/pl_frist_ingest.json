@@ -59,7 +59,7 @@
 									"referenceName": "ds_RestResource1",
 									"type": "DatasetReference",
 									"parameters": {
-										"ds_tags": {
+										"dsp_tags": {
 											"value": "@item()",
 											"type": "Expression"
 										}
