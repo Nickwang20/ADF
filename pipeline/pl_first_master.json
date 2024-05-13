@@ -41,6 +41,14 @@
 						"plp_tag": {
 							"value": "@pipeline().parameters.mplp_tag",
 							"type": "Expression"
+						},
+						"plp_fromdate": {
+							"value": "@variables('FromDate')",
+							"type": "Expression"
+						},
+						"plp_todate": {
+							"value": "@variables('Todate')",
+							"type": "Expression"
 						}
 					}
 				}
