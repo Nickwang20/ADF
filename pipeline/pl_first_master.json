@@ -180,8 +180,6 @@
 			{
 				"name": "loggingpipelineend",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "load",
