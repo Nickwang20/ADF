@@ -13,6 +13,18 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "set datafrom unix",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set dateto unix",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -130,7 +142,16 @@
 			{
 				"name": "loggingpipelinestart",
 				"type": "Script",
-				"dependsOn": [],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -156,6 +177,8 @@
 			{
 				"name": "loggingpipelineend",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "load",
@@ -184,6 +207,76 @@
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "Select PipelineStartTime \nFrom logging.vpipelinerun\nwhere PipelineName = '@{pipeline().Pipeline}'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_AzureSqlTable1",
+						"type": "DatasetReference",
+						"parameters": {
+							"sql_schema": {
+								"value": "@pipeline().parameters.mplp_sql_logging_schema",
+								"type": "Expression"
+							},
+							"sql_table": {
+								"value": "@pipeline().parameters.mplp_sql_logging_view",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "set datafrom unix",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "FromDate",
+					"value": "@{div(sub(ticks(@activity('Lookup1').output.firstrow.PipelineStartTime), ticks('1970-01-01')), 10000000)}"
+				}
+			},
+			{
+				"name": "Set dateto unix",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Todate",
+					"value": "@{div(sub(ticks(utcNow()), ticks('1970-01-01')), 10000000)}"
 				}
 			}
 		],
@@ -219,6 +312,22 @@
 			"mplp_sql_dim": {
 				"type": "string",
 				"defaultValue": "dimOwners"
+			},
+			"mplp_sql_logging_schema": {
+				"type": "string",
+				"defaultValue": "logging"
+			},
+			"mplp_sql_logging_view": {
+				"type": "string",
+				"defaultValue": "vpipelinerun"
+			}
+		},
+		"variables": {
+			"Todate": {
+				"type": "String"
+			},
+			"FromDate": {
+				"type": "String"
 			}
 		},
 		"annotations": [],

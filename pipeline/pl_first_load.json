@@ -180,6 +180,14 @@
 				"type": "string"
 			}
 		},
+		"variables": {
+			"Todate": {
+				"type": "String"
+			},
+			"FromDate": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }

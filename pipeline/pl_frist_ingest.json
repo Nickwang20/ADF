@@ -126,6 +126,14 @@
 				"type": "array"
 			}
 		},
+		"variables": {
+			"Todate": {
+				"type": "String"
+			},
+			"FromDate": {
+				"type": "String"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2024-05-09T18:24:47Z"
 	},
