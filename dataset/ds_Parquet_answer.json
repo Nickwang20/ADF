@@ -1,0 +1,101 @@
+{
+	"name": "ds_Parquet_answer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "answer",
+				"container": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "question_id",
+				"type": "INT32"
+			},
+			{
+				"name": "title",
+				"type": "UTF8"
+			},
+			{
+				"name": "accepted_answer_id",
+				"type": "INT32"
+			},
+			{
+				"name": "answer_count",
+				"type": "INT32"
+			},
+			{
+				"name": "closed_date",
+				"type": "INT32"
+			},
+			{
+				"name": "closed_reason",
+				"type": "UTF8"
+			},
+			{
+				"name": "content_license",
+				"type": "UTF8"
+			},
+			{
+				"name": "creation_date",
+				"type": "INT32"
+			},
+			{
+				"name": "is_answered",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "last_activity_date",
+				"type": "INT32"
+			},
+			{
+				"name": "last_edit_date",
+				"type": "INT32"
+			},
+			{
+				"name": "link",
+				"type": "UTF8"
+			},
+			{
+				"name": "score",
+				"type": "INT32"
+			},
+			{
+				"name": "tags",
+				"type": "UTF8"
+			},
+			{
+				"name": "view_count",
+				"type": "INT32"
+			},
+			{
+				"name": "owner.account_id",
+				"type": "INT32"
+			},
+			{
+				"name": "owner.display_name",
+				"type": "UTF8"
+			},
+			{
+				"name": "owner.accept_rate",
+				"type": "INT32"
+			},
+			{
+				"name": "owner.reputation",
+				"type": "INT32"
+			},
+			{
+				"name": "owner.user_id",
+				"type": "INT32"
+			}
+		]
+	}
+}
