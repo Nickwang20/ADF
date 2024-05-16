@@ -7,6 +7,9 @@
 		},
 		"annotations": [],
 		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "answers?order=desc&sort=activity&site=stackoverflow"
+		},
 		"schema": []
 	}
 }
