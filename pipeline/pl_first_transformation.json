@@ -221,16 +221,6 @@
 									"type": "Expression"
 								}
 							}
-						},
-						"linkedServiceParameters": {
-							"source1": {
-								"schemaLinkedService": {
-									"dsp_folder": {
-										"value": "@pipeline().parameters.plp_union_folder",
-										"type": "Expression"
-									}
-								}
-							}
 						}
 					},
 					"compute": {
@@ -262,10 +252,7 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "ds_Parquet_sliver",
-						"type": "DatasetReference",
-						"parameters": {
-							"dsp_folder": " "
-						}
+						"type": "DatasetReference"
 					},
 					"logStorageSettings": {
 						"linkedServiceName": {

@@ -1,0 +1,121 @@
+{
+	"name": "df_integration_answer",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_Parquet_answer",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_Parquet_silver_answer",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_Parquet_silver_answer",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "window1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "select2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          question_id as integer,",
+				"          title as string,",
+				"          accepted_answer_id as integer,",
+				"          answer_count as integer,",
+				"          closed_date as integer,",
+				"          closed_reason as string,",
+				"          content_license as string,",
+				"          creation_date as integer,",
+				"          is_answered as boolean,",
+				"          last_activity_date as integer,",
+				"          last_edit_date as integer,",
+				"          link as string,",
+				"          score as integer,",
+				"          tags as string,",
+				"          view_count as integer,",
+				"          {owner.account_id} as integer,",
+				"          {owner.display_name} as string,",
+				"          {owner.accept_rate} as integer,",
+				"          {owner.reputation} as integer,",
+				"          {owner.user_id} as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
+				"source1 select(mapColumn(",
+				"          account_id = {owner.account_id},",
+				"          display_name = {owner.display_name},",
+				"          accept_rate = {owner.accept_rate},",
+				"          reputation = {owner.reputation},",
+				"          user_id = {owner.user_id}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 window(over(account_id),",
+				"     asc(account_id, true),",
+				"     row_number = rowNumber()) ~> window1",
+				"window1 filter(row_number == 1) ~> filter1",
+				"source1 select(mapColumn(",
+				"          question_id,",
+				"          title,",
+				"          accepted_answer_id,",
+				"          answer_count,",
+				"          closed_date,",
+				"          closed_reason,",
+				"          content_license,",
+				"          creation_date,",
+				"          is_answered,",
+				"          last_activity_date,",
+				"          last_edit_date,",
+				"          link,",
+				"          score,",
+				"          tags,",
+				"          view_count,",
+				"          {owner.account_id}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('roundRobin', 2)) ~> sink1",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('roundRobin', 2)) ~> sink2"
+			]
+		}
+	}
+}
