@@ -56,7 +56,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_RestResource1",
+									"referenceName": "ds_RestResource1_question",
 									"type": "DatasetReference",
 									"parameters": {
 										"dsp_tags": {
