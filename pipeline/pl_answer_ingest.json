@@ -1,5 +1,5 @@
 {
-	"name": "pl_ingest_answer",
+	"name": "pl_answer_ingest",
 	"properties": {
 		"activities": [
 			{
