@@ -37,13 +37,7 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          has_more as boolean,",
-				"          items as (answer_id as integer, content_license as string, creation_date as integer, is_accepted as boolean, last_activity_date as integer, last_edit_date as integer, owner as (accept_rate as short, account_id as integer, display_name as string, link as string, profile_image as string, reputation as integer, user_id as integer, user_type as string), question_id as integer, score as short)[],",
-				"          quota_max as short,",
-				"          quota_remaining as short",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false,",
