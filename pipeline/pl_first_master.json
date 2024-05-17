@@ -321,6 +321,71 @@
 						"receiver": "@{pipeline().parameters.reveiver}"
 					}
 				}
+			},
+			{
+				"name": "ingest answer",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "transformation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_answer_ingest",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "answer transformation",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ingest answer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_answer_transformation",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "load2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "answer transformation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"parameters": {
