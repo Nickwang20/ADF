@@ -38,8 +38,6 @@
 			{
 				"name": "purgeSilver",
 				"type": "Delete",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data1",
@@ -80,8 +78,6 @@
 			{
 				"name": "bronzetosilver",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "purgeSilver",
