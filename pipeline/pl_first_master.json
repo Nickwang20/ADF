@@ -95,7 +95,14 @@
 			{
 				"name": "load",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "transformation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"secureInput": false
 				},
@@ -320,7 +327,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "transformation",
+						"activity": "load",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -395,6 +402,47 @@
 						"referenceName": "pl_answer_load",
 						"type": "PipelineReference"
 					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"plp_fact_folder": {
+							"value": "@pipeline().parameters.mplp_fact_folder_as",
+							"type": "Expression"
+						},
+						"plp_dim_folder": {
+							"value": "@pipeline().parameters.mplp_dim_folder_as",
+							"type": "Expression"
+						},
+						"sql_schema": {
+							"value": "@pipeline().parameters.mplp_sql_schema",
+							"type": "Expression"
+						},
+						"sql_table_fact": {
+							"value": "@pipeline().parameters.mplp_sql_fact_as",
+							"type": "Expression"
+						},
+						"sql_table_dim": {
+							"value": "@pipeline().parameters.mplp_sql_dim_as",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "load2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
 					"waitOnCompletion": true
 				}
 			}
@@ -445,10 +493,12 @@
 				"defaultValue": "nickwang.20@gmail.com"
 			},
 			"mplp_sql_fact_as": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "fact_as"
 			},
 			"mplp_sql_dim_as": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dim_as"
 			},
 			"mplp_union_folder_as": {
 				"type": "string",
