@@ -358,7 +358,21 @@
 						"referenceName": "pl_answer_transformation",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"dsp_union_folder": {
+							"value": "@pipeline().parameters.mplp_union_folder_as",
+							"type": "Expression"
+						},
+						"dsp_as_fact_folder": {
+							"value": "@pipeline().parameters.mplp_sql_fact_as",
+							"type": "Expression"
+						},
+						"dsp_as_dim_folder": {
+							"value": "@pipeline().parameters.mplp_sql_dim_as",
+							"type": "Expression"
+						}
+					}
 				}
 			},
 			{
@@ -377,6 +391,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_answer_load",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}
@@ -431,6 +449,18 @@
 			},
 			"mplp_sql_dim_as": {
 				"type": "string"
+			},
+			"mplp_union_folder_as": {
+				"type": "string",
+				"defaultValue": "union_as"
+			},
+			"mplp_fact_folder_as": {
+				"type": "string",
+				"defaultValue": "fact_as"
+			},
+			"mplp_dim_folder_as": {
+				"type": "string",
+				"defaultValue": "dim_as"
 			}
 		},
 		"variables": {
