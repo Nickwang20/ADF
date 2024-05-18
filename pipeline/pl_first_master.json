@@ -95,14 +95,7 @@
 			{
 				"name": "load",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "transformation",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},

@@ -1,12 +1,12 @@
 {
-	"name": "ds_Parquet_silver_answer",
+	"name": "ds_Parquet_merge",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"dsp_folder_answer": {
+			"dsp_folder_merge": {
 				"type": "string"
 			}
 		},
@@ -16,7 +16,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"folderPath": {
-					"value": "answer/@dataset().dsp_folder_answer",
+					"value": "@dataset().dsp_folder_merge",
 					"type": "Expression"
 				},
 				"container": "silver"

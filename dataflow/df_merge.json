@@ -1,0 +1,95 @@
+{
+	"name": "df_merge",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_Parquet_silver_answer",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_Parquet_merge",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectAnswer"
+				},
+				{
+					"name": "selectQuestion"
+				},
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
+				"source(output(",
+				"          {owner.account_id} as integer,",
+				"          {owner.display_name} as string,",
+				"          {owner.accept_rate} as integer,",
+				"          {owner.reputation} as integer,",
+				"          {owner.user_id} as integer,",
+				"          row_number as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1 select(mapColumn(",
+				"          account_id,",
+				"          accept_rate,",
+				"          display_name,",
+				"          link,",
+				"          profile_image,",
+				"          reputation,",
+				"          user_id,",
+				"          user_type",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectAnswer",
+				"source2 select(mapColumn(",
+				"          account_id = {owner.account_id},",
+				"          display_name = {owner.display_name},",
+				"          accept_rate = {owner.accept_rate},",
+				"          reputation = {owner.reputation},",
+				"          user_id = {owner.user_id}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectQuestion",
+				"selectAnswer, selectQuestion join(selectAnswer@account_id == selectQuestion@account_id,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
