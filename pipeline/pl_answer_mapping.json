@@ -1,6 +1,49 @@
 {
-	"name": "pl_answer_merge",
+	"name": "pl_answer_mapping",
 	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_mapping",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"sql_schema": {
+				"type": "string"
+			},
+			"sql_schema2": {
+				"type": "string"
+			},
+			"sql_table": {
+				"type": "string"
+			},
+			"sql_table2": {
+				"type": "string"
+			},
+			"dsp_folder_merge": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }

@@ -325,8 +325,6 @@
 			{
 				"name": "ingest answer",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "load",
@@ -350,8 +348,6 @@
 			{
 				"name": "answer transformation",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "ingest answer",
@@ -389,8 +385,6 @@
 			{
 				"name": "load2",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "answer transformation",
@@ -434,10 +428,8 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "generatemapping",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "load2",
@@ -451,6 +443,33 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_answer_mapping",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "load mapping",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "generatemapping",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_answer_load2",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}

@@ -6,17 +6,17 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_Parquet_silver_answer",
+						"referenceName": "ds_AzureSqlTable2",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "sourceAnswer"
 				},
 				{
 					"dataset": {
 						"referenceName": "ds_AzureSqlTable1",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "sourceQuestion"
 				}
 			],
 			"sinks": [
@@ -43,8 +43,8 @@
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
-				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> source1",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> sourceAnswer",
 				"source(output(",
 				"          {owner.account_id} as integer,",
 				"          {owner.display_name} as string,",
@@ -57,8 +57,8 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source2",
-				"source1 select(mapColumn(",
+				"     format: 'table') ~> sourceQuestion",
+				"sourceAnswer select(mapColumn(",
 				"          account_id,",
 				"          accept_rate,",
 				"          display_name,",
@@ -70,7 +70,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectAnswer",
-				"source2 select(mapColumn(",
+				"sourceQuestion select(mapColumn(",
 				"          account_id = {owner.account_id},",
 				"          display_name = {owner.display_name},",
 				"          accept_rate = {owner.accept_rate},",

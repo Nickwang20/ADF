@@ -1,9 +1,9 @@
 {
-	"name": "pl_answer_load",
+	"name": "pl_answer_load2",
 	"properties": {
 		"activities": [
 			{
-				"name": "loaddim",
+				"name": "loadownership",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -20,92 +20,6 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": {
-								"value": "@pipeline().parameters.plp_fact_folder",
-								"type": "Expression"
-							},
-							"wildcardFileName": "*.parquet",
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "ParquetReadSettings"
-						}
-					},
-					"sink": {
-						"type": "AzureSqlSink",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false,
-						"disableMetricsCollection": false
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "ds_Parquet_answer",
-						"type": "DatasetReference",
-						"parameters": {
-							"dsp_folder": {
-								"value": "@pipeline().parameters.plp_dim_folder",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "ds_AzureSqlTable2",
-						"type": "DatasetReference",
-						"parameters": {
-							"sql_schema2": {
-								"value": "@pipeline().parameters.sql_schema",
-								"type": "Expression"
-							},
-							"sql_table2": {
-								"value": "@pipeline().parameters.sql_table_dim",
-								"type": "Expression"
-							}
-						}
-					}
-				]
-			},
-			{
-				"name": "loadfact",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "loaddim",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "ParquetSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"wildcardFolderPath": {
-								"value": "@pipeline().parameters.plp_fact_folder",
-								"type": "Expression"
-							},
-							"wildcardFileName": "*.parquet",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -129,51 +43,77 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_Parquet_answer",
-						"type": "DatasetReference",
-						"parameters": {
-							"dsp_folder": {
-								"value": "@pipeline().parameters.plp_fact_folder",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "ds_Parquet_silver_answer",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_AzureSqlTable2",
-						"type": "DatasetReference",
-						"parameters": {
-							"sql_schema": {
-								"value": "@pipeline().parameters.sql_schema",
-								"type": "Expression"
-							},
-							"sql_table": {
-								"value": "@pipeline().parameters.sql_table_fact",
-								"type": "Expression"
-							}
+						"referenceName": "ds_AzureSqlTable1",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "loadmap",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "loadownership",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
 						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_Parquet_silver_answer",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_AzureSqlTable1",
+						"type": "DatasetReference"
 					}
 				]
 			}
 		],
-		"parameters": {
-			"plp_fact_folder": {
-				"type": "string"
-			},
-			"plp_dim_folder": {
-				"type": "string"
-			},
-			"sql_schema": {
-				"type": "string"
-			},
-			"sql_table_fact": {
-				"type": "string"
-			},
-			"sql_table_dim": {
-				"type": "string"
-			}
-		},
 		"annotations": []
 	}
 }
