@@ -425,6 +425,12 @@
 			"receiver": {
 				"type": "string",
 				"defaultValue": "nickwang.20@gmail.com"
+			},
+			"mplp_sql_fact_as": {
+				"type": "string"
+			},
+			"mplp_sql_dim_as": {
+				"type": "string"
 			}
 		},
 		"variables": {

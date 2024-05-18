@@ -97,7 +97,37 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_integration_answer",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"dsp_folder": {
+									"value": "@pipeline().parameters.dsp_union_folder",
+									"type": "Expression"
+								}
+							},
+							"sink1Owner": {
+								"dsp_folder_answer": {
+									"value": "@pipeline().parameters.dsp_as_dim_folder",
+									"type": "Expression"
+								}
+							},
+							"sink2fact": {
+								"dsp_folder_answer": {
+									"value": "@pipeline().parameters.dsp_as_fact_folder",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceParameters": {
+							"source1": {
+								"schemaLinkedService": {
+									"dsp_folder": {
+										"value": "@pipeline().parameters.dsp_union_folder",
+										"type": "Expression"
+									}
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -131,7 +161,10 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "answer",
+							"wildcardFolderPath": {
+								"value": "@pipeline().parameters.dsp_union_folder",
+								"type": "Expression"
+							},
 							"wildcardFileName": "*.parquet",
 							"enablePartitionDiscovery": false
 						},
@@ -194,7 +227,19 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_transformation_answer",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sink1": {
+								"dsp_folder": "answer"
+							}
+						},
+						"linkedServiceParameters": {
+							"sink1": {
+								"schemaLinkedService": {
+									"dsp_folder": "answer"
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -204,6 +249,17 @@
 				}
 			}
 		],
+		"parameters": {
+			"dsp_union_folder": {
+				"type": "string"
+			},
+			"dsp_as_fact_folder": {
+				"type": "string"
+			},
+			"dsp_as_dim_folder": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }

@@ -18,14 +18,14 @@
 						"referenceName": "ds_Parquet_silver_answer",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sink1Owner"
 				},
 				{
 					"dataset": {
 						"referenceName": "ds_Parquet_silver_answer",
 						"type": "DatasetReference"
 					},
-					"name": "sink2"
+					"name": "sink2fact"
 				}
 			],
 			"transformations": [
@@ -43,27 +43,7 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          answer_id as integer,",
-				"          content_license as string,",
-				"          creation_date as integer,",
-				"          is_accepted as boolean,",
-				"          last_activity_date as integer,",
-				"          last_edit_date as integer,",
-				"          question_id as integer,",
-				"          score as boolean,",
-				"          quota_max as integer,",
-				"          quota_remaining as integer,",
-				"          accept_rate as integer,",
-				"          account_id as integer,",
-				"          display_name as string,",
-				"          link as string,",
-				"          profile_image as string,",
-				"          reputation as integer,",
-				"          user_id as integer,",
-				"          user_type as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false,",
@@ -103,13 +83,13 @@
 				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('roundRobin', 2)) ~> sink1",
+				"     partitionBy('roundRobin', 2)) ~> sink1Owner",
 				"selectfact sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('roundRobin', 2)) ~> sink2"
+				"     partitionBy('roundRobin', 2)) ~> sink2fact"
 			]
 		}
 	}
