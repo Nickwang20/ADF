@@ -252,7 +252,10 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "ds_Parquet_sliver",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"dsp_folder": " "
+						}
 					},
 					"logStorageSettings": {
 						"linkedServiceName": {

@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "ds_Parquet_answer",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"dsp_folder": " "
+						}
 					},
 					"logStorageSettings": {
 						"linkedServiceName": {
@@ -57,7 +60,10 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "ds_Parquet_silver_answer",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"dsp_folder_answer": " "
+						}
 					},
 					"logStorageSettings": {
 						"linkedServiceName": {
@@ -115,16 +121,6 @@
 								"dsp_folder_answer": {
 									"value": "@pipeline().parameters.dsp_as_fact_folder",
 									"type": "Expression"
-								}
-							}
-						},
-						"linkedServiceParameters": {
-							"source1": {
-								"schemaLinkedService": {
-									"dsp_folder": {
-										"value": "@pipeline().parameters.dsp_union_folder",
-										"type": "Expression"
-									}
 								}
 							}
 						}
@@ -195,13 +191,19 @@
 				"inputs": [
 					{
 						"referenceName": "ds_Parquet_answer",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"dsp_folder": " "
+						}
 					}
 				],
 				"outputs": [
 					{
 						"referenceName": "ds_Parquet_answer",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"dsp_folder": " "
+						}
 					}
 				]
 			},
